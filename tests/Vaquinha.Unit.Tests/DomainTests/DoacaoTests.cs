@@ -38,6 +38,24 @@ namespace Vaquinha.Unit.Tests.DomainTests
         }
 
         [Fact]
+        [Trait("Doacao", "Doacao_UsuarioAceitaReceberAlertaFuturasVaquinhas_DoacaoValida")]
+        public void Doacao_UsuarioAceitaReceberAlertaFuturasVaquinhas_DoacaoValida()
+        {
+            // Arrange
+            var doacao = _doacaoFixture.DoacaoValida();
+            doacao.AdicionarEnderecoCobranca(_enderecoFixture.EnderecoValido());
+            doacao.AdicionarFormaPagamento(_cartaoCreditoFixture.CartaoCreditoValido());
+
+            // Act
+            var valido = doacao.Valido();
+
+            // Assert
+            valido.Should().BeTrue(because: "os campos foram preenchidos corretamente");
+            doacao.ErrorMessages.Should().Contain("O campo Email é inválido.");
+            doacao.ErrorMessages.Should().HaveCount(1, because: "somente o campo email está inválido.");
+        }
+
+        [Fact]
         [Trait("Doacao", "Doacao_DadosPessoaisInvalidos_DoacaoInvalida")]
         public void Doacao_DadosPessoaisInvalidos_DoacaoInvalida()
         {
